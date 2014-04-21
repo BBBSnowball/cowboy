@@ -37,6 +37,8 @@
 %% inactivity.
 -module(cowboy_loop_handler).
 
+-ifdef(ERLANG_R15_OR_NEWER).
+
 -type opts() :: any().
 -type state() :: any().
 -type terminate_reason() :: {normal, shutdown}
@@ -61,3 +63,16 @@
 	| {loop, Req, State, hibernate}
 	when Req::cowboy_req:req(), State::state().
 -callback terminate(terminate_reason(), cowboy_req:req(), state()) -> ok.
+
+-else.
+
+-export([behaviour_info/1]).
+
+behaviour_info(callbacks) ->
+    [{init,3},
+	 {info,3},
+	 {terminate,3}];
+behaviour_info(_Other) ->
+    undefined.
+
+-endif.

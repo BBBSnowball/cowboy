@@ -48,6 +48,8 @@
 %% <em>hibernate</em>. Doing so helps save memory and improve CPU usage.
 -module(cowboy_websocket_handler).
 
+-ifdef(ERLANG_R15_OR_NEWER).
+
 -type opts() :: any().
 -type state() :: any().
 -type terminate_reason() :: {normal, shutdown}
@@ -82,3 +84,17 @@
 	when Req::cowboy_req:req(), State::state().
 -callback websocket_terminate(terminate_reason(), cowboy_req:req(), state())
 	-> ok.
+
+-else.
+
+-export([behaviour_info/1]).
+
+behaviour_info(callbacks) ->
+    [{websocket_init,3},
+	 {websocket_handle,3},
+	 {websocket_info,3},
+	 {websocket_terminate,3}];
+behaviour_info(_Other) ->
+    undefined.
+
+-endif.

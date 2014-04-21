@@ -29,9 +29,22 @@
 %% {upgrade, protocol, Module}, where Module is the module of the sub protocol.
 -module(cowboy_sub_protocol).
 
+-ifdef(ERLANG_R15_OR_NEWER).
+
 -callback upgrade(Req, Env, module(), any())
 	-> {ok, Req, Env}
 	| {suspend, module(), atom(), [any()]}
 	| {halt, Req}
 	| {error, cowboy:http_status(), Req}
 	when Req::cowboy_req:req(), Env::cowboy_middleware:env().
+
+-else.
+
+-export([behaviour_info/1]).
+
+behaviour_info(callbacks) ->
+    [{upgrade,4}];
+behaviour_info(_Other) ->
+    undefined.
+
+-endif.

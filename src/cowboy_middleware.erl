@@ -28,9 +28,22 @@
 -type env() :: [{atom(), any()}].
 -export_type([env/0]).
 
+-ifdef(ERLANG_R15_OR_NEWER).
+
 -callback execute(Req, Env)
 	-> {ok, Req, Env}
 	| {suspend, module(), atom(), [any()]}
 	| {halt, Req}
 	| {error, cowboy:http_status(), Req}
 	when Req::cowboy_req:req(), Env::env().
+
+-else.
+
+-export([behaviour_info/1]).
+
+behaviour_info(callbacks) ->
+    [{execute,2}];
+behaviour_info(_Other) ->
+    undefined.
+
+-endif.
