@@ -110,7 +110,7 @@ fullpath([Segment|Tail], Acc) ->
 	fullpath(Tail, [Segment|Acc]).
 
 rest_init_info(Req, Path, Extra) ->
-	Info = file:read_file_info(Path, [{time, universal}]),
+	Info = file:read_file_info(Path),
 	{ok, Req, {Path, Info, Extra}}.
 
 -ifdef(TEST).
